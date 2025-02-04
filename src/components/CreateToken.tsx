@@ -1,12 +1,12 @@
 import { createInitializeMint2Instruction, getMinimumBalanceForRentExemptAccount, MINT_SIZE, TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-import { Keypair, SystemProgram, Transaction } from "@solana/web3.js";
+import { Keypair, PublicKey, SystemProgram, Transaction } from "@solana/web3.js";
 import React from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 
 interface TokenLaunchPadProps {
-    onTokenCreate: (mintAddress: string) => void;
+    onTokenCreate: (mintAddress: PublicKey) => void;
 }
 
 export const TokenLaunchPad: React.FC<TokenLaunchPadProps> = ({ onTokenCreate }) => {
@@ -41,7 +41,7 @@ export const TokenLaunchPad: React.FC<TokenLaunchPadProps> = ({ onTokenCreate })
             await wallet.sendTransaction(trnx, connection);
 
             console.log(`Token mint created at ${mintKeyPair.publicKey.toBase58()}`);
-            onTokenCreate(mintKeyPair.publicKey.toBase58());
+            onTokenCreate(mintKeyPair.publicKey);
 
         } catch (error) {
             console.error("Error creating token:", error);

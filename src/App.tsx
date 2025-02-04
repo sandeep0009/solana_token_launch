@@ -5,13 +5,15 @@ import {ConnectionProvider, WalletProvider} from "@solana/wallet-adapter-react";
 import {  WalletDisconnectButton, WalletModalProvider, WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 import { useMemo, useState } from 'react';
-import { clusterApiUrl } from '@solana/web3.js';
+import { clusterApiUrl, PublicKey } from '@solana/web3.js';
 import { TokenLaunchPad } from './components/CreateToken';
+import { MintToken } from './components/MintToken';
 
 function App() {
   const network=WalletAdapterNetwork.Mainnet;
   const endpoint = useMemo(() => clusterApiUrl(network), [network]);
-  const [token,setToken]=useState<string | null>(null);
+  const [token,setToken]=useState<PublicKey | null>(null);
+  const[mintDone,setMintDone]=useState(false);
 
   return (
     <>
@@ -26,6 +28,9 @@ function App() {
         <div>
           <TokenLaunchPad onTokenCreate={(tokenMint)=>{setToken(tokenMint)}}/>
         </div>
+
+        {token && token.toBase58()}
+        {token && <MintToken onDone={() => setMintDone(true)} mintAddress={token} />}
 
       </WalletModalProvider>
 
